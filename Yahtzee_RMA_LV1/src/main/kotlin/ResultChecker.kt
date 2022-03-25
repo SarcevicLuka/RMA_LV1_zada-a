@@ -1,22 +1,32 @@
-class ResultChecker {
+class ResultChecker (val diceHandler:DiceHandler){
 
-    private fun isPoker(hand:Hand){
-        val pokerMap = hand.lockedDice.groupingBy { it }.eachCount().filter { it.value >= 4 }
+    private fun isPoker(dice:MutableList<Int>){
+        val pokerMap = dice.groupingBy { it }.eachCount().filter { it.value == 4 }
         println(pokerMap.isNotEmpty())
         if(pokerMap.isNotEmpty()) {
             println("You got a poker!")
         }
     }
 
-    private fun isYahtzee(hand:Hand){
-        val yahtzeeMap = hand.lockedDice.groupingBy { it }.eachCount().filter { it.value >= 5 }
+    private fun isYahtzee(dice:MutableList<Int>){
+        val yahtzeeMap = dice.groupingBy { it }.eachCount().filter { it.value == 5 }
         if(yahtzeeMap.isNotEmpty()) {
             println("You got a yahtzee!")
         }
     }
 
+    private fun isDoublePair(dice:MutableList<Int>){
+        val pairMap = dice.groupingBy { it }.eachCount().filter { it.value == 2 }
+        if(pairMap.count() >= 2){
+            println("You got two pairs")
+        }
+    }
+
     fun checkResults(hand:Hand){
-        isPoker(hand)
-        isYahtzee(hand)
+        var dice = mutableListOf<Int>()
+        dice = diceHandler.makeDiceList(hand)
+        isPoker(dice)
+        isYahtzee(dice)
+        isDoublePair(dice)
     }
 }
